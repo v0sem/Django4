@@ -1,0 +1,1 @@
+ERROR_MESSAGE_ID = 'msg_error'
