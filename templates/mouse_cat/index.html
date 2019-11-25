@@ -4,17 +4,20 @@
 
 {% block content %}
 <div id="content">
-    <h1>Service catalog</h1>
+    <h2 class="center">Service catalog</h2>
 
-    <ul>
-        <li><a href="{% url 'login' %}">Login</a></li>
-        <li><a href="{% url 'logout' %}">Logout</a></li>
-        <li><a href="{% url 'signup' %}">Signup</a></li>
-        <li><a href="{% url 'counter' %}">Counter</a></li>
-        <li><a href="{% url 'create_game' %}">Create game</a></li>
-        <li><a href="{% url 'join_game' %}">Join game</a></li>
-        <li><a href="{% url 'select_game' %}">Select game</a></li>
-        <li><a href="{% url 'show_game' %}">Show selected game and play</a></li>
+    <ul class="list-center">
+        {% if request.user %}
+        <li><a class="link" href="{% url 'logout' %}">Logout</a></li>
+        <li><a class="link" href="{% url 'counter' %}">Counter</a></li>
+        <li><a class="link" href="{% url 'create_game' %}">Create game</a></li>
+        <li><a class="link" href="{% url 'join_game' %}">Join game</a></li>
+        <li><a class="link" href="{% url 'select_game' %}">Select game</a></li>
+        <li><a class="link" href="{% url 'show_game' %}">Show selected game and play</a></li>
+        {% else %}
+        <li><a class="link" href="{% url 'login' %}">Login</a></li>
+        <li><a class="link" href="{% url 'signup' %}">Signup</a></li>
+        {% endif %}
     </ul>
 </div>
 {% endblock content %}
