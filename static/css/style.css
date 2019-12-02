@@ -1,18 +1,23 @@
 body
 {
     background-image: url("../images/background.jpg");
-    color: #654321;
+    color: #312010;
 }
 
 .center
 {
-    padding-left: 700px;
+    padding-left: 76%;
 }
 
-.list-center
+.content
 {
-    padding-left: 700px;
-    list-style: none;
+    margin-left: 30%;
+    margin-right: 26%;
+}
+
+ul 
+{
+    list-style-type: none;  
 }
 
 ul li:before
@@ -21,7 +26,49 @@ ul li:before
     margin: 0 1em;
 }
 
+li
+{
+    margin-bottom: 10px;
+}
+
 .link
 {
-    color: white;
+    color: #654321;
+    border-top: 1px solid black;
+    padding: 14px 16px;
+    display: block;
+    text-decoration: none;
+}
+
+#title
+{
+    font-size: xx-large;
+    margin-bottom: 0px;
+}
+
+#header
+{
+    margin-top: 10px;
+    font-size: medium;
+}
+
+.verticalDivider
+{
+    border-left:1px solid #38546d; 
+    border-right:1px solid #16222c; 
+    height:80%;
+    position:absolute;
+    right:25%;
+    top:10%;
+    border-color: goldenrod;
+}
+
+.background-list
+{
+    margin-left: 76%;
+    background-image: linear-gradient(#F37658, #FCD77C);
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    position: absolute;
 }

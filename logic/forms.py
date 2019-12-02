@@ -8,6 +8,7 @@ from django.contrib.auth import password_validation, authenticate
 
 from logic import tests_services
 
+
 class SignupForm(forms.ModelForm):
 
     password = forms.CharField(label='Enter password', required=True, widget=forms.PasswordInput)
@@ -15,12 +16,12 @@ class SignupForm(forms.ModelForm):
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
-        password_validation.validate_password(password, 
-                        password_validators=(MinimumLengthValidator(min_length=6), 
-                                            NumericPasswordValidator(), 
-                                            CommonPasswordValidator()))
+        password_validation.validate_password(password,
+                                              password_validators=(MinimumLengthValidator(min_length=6),
+                                                                   NumericPasswordValidator(),
+                                                                   CommonPasswordValidator()))
         return password
-    
+
     def clean_password2(self):
         password = self.cleaned_data.get('password')
         password2 = self.cleaned_data.get('password2')
@@ -35,13 +36,13 @@ class SignupForm(forms.ModelForm):
         user.set_password(self.cleaned_data.get('password'))
         user.save()
         return user
-    
+
     class Meta:
         model = User
         fields = ('username', 'password', 'password2')
 
-class loginForm(AuthenticationForm):
 
+class loginForm(AuthenticationForm):
 
     def is_valid(self):
 
@@ -51,14 +52,43 @@ class loginForm(AuthenticationForm):
         if not User.objects.filter(username=name).exists():
             self.add_error(None, tests_services.SERVICE_DEF[tests_services.LOGIN_ERROR]['pattern'])
             return False
-        
+
         if not authenticate(username=name, password=passw):
             self.add_error(None, tests_services.SERVICE_DEF[tests_services.LOGIN_ERROR]['pattern'])
             return False
-        
+
         return super(loginForm, self).is_valid()
-    
 
     class Meta:
         model = User
         fields = ('username', 'password')
+
+
+class MoveForm(forms.Form):
+
+    origin = forms.IntegerField(initial=0, required=True)
+    target = forms.IntegerField(initial=0, required=True)
+
+    def __init__(self, *args, game=None, **kwargs):
+        self.game = game
+        super(MoveForm, self).__init__(*args, **kwargs)
+
+    def is_valid(self):
+        move = Move()
+        if self.game == None:
+            if move.valid_nogame(self.data['origin'], self.data['target']):
+                return super(MoveForm, self).is_valid()
+            return False
+        else:
+            if self.game.cat_turn:
+                if move.valid(self.game, self.game.cat_user, self.data['origin'], self.data['target']):
+                    return super(MoveForm, self).is_valid()
+            else:
+                if move.valid(self.game, self.game.mouse_user, self.data['origin'], self.data['target']):
+                    return super(MoveForm, self).is_valid()
+
+        return False
+
+    class Meta:
+        model = Move
+        fields = ('origin', 'target')

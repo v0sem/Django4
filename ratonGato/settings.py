@@ -120,3 +120,5 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticHeroku')
 
 STATICFILES_DIRS = [STATIC_DIR, ]
+
+LOGIN_URL = '/login/'

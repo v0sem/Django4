@@ -3,21 +3,33 @@
 {% load staticfiles %}
 
 {% block content %}
-<div id="content">
-    <h2 class="center">Service catalog</h2>
-
-    <ul class="list-center">
-        {% if request.user %}
-        <li><a class="link" href="{% url 'logout' %}">Logout</a></li>
-        <li><a class="link" href="{% url 'counter' %}">Counter</a></li>
-        <li><a class="link" href="{% url 'create_game' %}">Create game</a></li>
-        <li><a class="link" href="{% url 'join_game' %}">Join game</a></li>
-        <li><a class="link" href="{% url 'select_game' %}">Select game</a></li>
-        <li><a class="link" href="{% url 'show_game' %}">Show selected game and play</a></li>
-        {% else %}
-        <li><a class="link" href="{% url 'login' %}">Login</a></li>
-        <li><a class="link" href="{% url 'signup' %}">Signup</a></li>
-        {% endif %}
+    <h3>Reglas del juego:</h3>
+    <ul>
+        <li>Es un juego para dos jugadores. Uno tomará 
+            control de los gatos y el que se una a su 
+            partida será el ratón.
+        </li>
+        <li>
+            Las piezas del gato sólo se podrán mover en diagonal
+            hacia abajo.
+        </li>
+        <li>
+            La pieza del ratón se puede mover en diagonal, tanto
+            para arriba como para abajo.
+        </li>
+        <li>
+            Cada turno cada jugador mueve una ficha y pasa el turno
+            al jugador siguiente.
+        </li>
+        <li>
+            El gato siempre empieza.
+        </li>
     </ul>
-</div>
+    <h3>Condición de victoria</h3>
+    <ul>
+        <li>
+            Un jugador gana si el otro no tiene movimientos
+            posibles
+        </li>
+    </ul>
 {% endblock content %}

@@ -14,19 +14,38 @@
 
 <body id="body">
     <div id="totalheader">
-        <div id="title">
-            {% block atitle %}<h1>Mouse vs. Cats application</h1>{% endblock atitle %}
-        </div>
+        <h1 id="title">
+            {% block atitle %}Mouse vs. Cats application{% endblock atitle %}
+        </h1>
 
         <div id="header">
             {% if request.user.is_authenticated %}
-                Welcome <span class="username">{{ request.user.username }}</span>!
+                Bienvenido! <span class="username">{{ request.user.username }}</span>!
             {% endif %}
         </div>
     </div>
 
+    <div class="verticalDivider"></div>
+    <div id="sidebar">
+        <h2 class="center">Service catalog</h2>
+            <div class="background-list">
+                {% if user.is_authenticated %}
+                <a class="link" href="{% url 'logout' %}">Logout</a>
+                <a class="link" href="{% url 'counter' %}">Counter</a>
+                <a class="link" href="{% url 'create_game' %}">Create game</a>
+                <a class="link" href="{% url 'join_game' %}">Join game</a>
+                <a class="link" href="{% url 'select_game' %}">Select game</a>
+                <a class="link" href="{% url 'show_game' %}">Show selected game and play</a>
+                {% else %}
+                <a class="link" href="{% url 'login' %}">Login</a>
+                <a class="link" href="{% url 'signup' %}">Signup</a>
+                {% endif %}
+            </div>
+    </div>
+    <div class="content">
     {% block content %}
     {% endblock content %}
+    </div>
 
     {% block footer %}
     {% endblock footer %}
