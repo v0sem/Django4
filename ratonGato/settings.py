@@ -27,7 +27,7 @@ SECRET_KEY = 'f3smnus7cf-656dm%g$)7&)u)vrwlas_3+^%^pqg(-@wr4szez'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [u'blooming-anchorage-14787.herokuapp.com', u'127.0.0.1']
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'datamodel',
+    'logic',
 ]
 
 MIDDLEWARE = [
@@ -76,8 +77,15 @@ DATABASES = {}
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-DATABASES['default'] = dj_database_url.config(default='postgres://alumnodb:alumnodb@localhost:5432/psi')
-
+DATABASES = {}
+if os.getenv('SQLITE', False):
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+else:
+    DATABASES['default'] = dj_database_url.config(
+        default='postgres://alumnodb:alumnodb@localhost:5432/psi')
 
 
 # Password validation
@@ -117,8 +125,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+LOGIN_URL = '/login/'
+
+# Parse database configuration from $DATABASE_URL
+import dj_database_url
+DATABASES['default'] = dj_database_url.config(default='postgres://alumnodb:alumnodb@localhost:5432/psi')
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticHeroku')
 
 STATICFILES_DIRS = [STATIC_DIR, ]
-
-LOGIN_URL = '/login/'

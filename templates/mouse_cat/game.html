@@ -1,10 +1,10 @@
 {% extends "mouse_cat/base.html" %}
+{% load staticfiles %}
 
 {% block content %}
 <div id="content">
     <h1>Play</h1>
-    <p>Game: <b>{{ game.id }}</b></p>
-    <form id="move_form" method="post" action="{% url 'move' %}">
+    <form id="move_form" method="post" action="{% url 'move' %}" hidden>
         {% csrf_token %}
         <p>
             Cats: <b>{{ game.cat_user.username }}</b>
@@ -37,20 +37,21 @@
     </form>
 
     {% if board %}
-        <p>Board: {{ board }}</p>
-        <table id="chess_board">
+        <div class="chess_board">
+        <table class="board">
         {% for item in board %}
             {% if forloop.counter0|divisibleby:8 %}<tr>{% endif %}
-            <td id="cell_{{ forloop.counter0}}"" style='width:20px;border:1px solid #000000;text-align:center;'>
+            <td class="cell" id="cell_{{ forloop.counter0}}" style='width:20px;border:1px solid #000000;text-align:center;'>
                 {% if item ==  0 %}   x
-                {% elif item == 1 %}  &#9922;
+                {% elif item == 1 %} <img class="cat" src="{% static 'images/cat.png'%}">
                 {% else %}  &#9920; {% endif %}
             </td>
             {% if forloop.counter|divisibleby:8 or forloop.last %}</tr>{% endif %}
         {% endfor %}
         </table>
+    </div>
     {% endif %}
 
-    <p><a href="{% url 'landing' %}">Return to homepage</a></p>
+    <p><a class="to-home" href="{% url 'landing' %}">Return to homepage</a></p>
 </div>
 {% endblock content %}
