@@ -38,7 +38,8 @@ def login(request):
 
         if form.is_valid():
 
-            user = authenticate(username=request.POST.get('username'), password=request.POST.get('password'))
+            user = authenticate(username=request.POST.get(
+                'username'), password=request.POST.get('password'))
 
             djangologin(request, user)
             request.session['counter'] = 0
@@ -101,12 +102,14 @@ def select_game(request, game_id=-1):
 
     if game_id == -1:
         context_dict = {}
-        as_cat = list(Game.objects.filter(cat_user=user, status=GameStatus.ACTIVE))
+        as_cat = list(Game.objects.filter(
+            cat_user=user, status=GameStatus.ACTIVE))
         print(as_cat)
         if as_cat:
             context_dict['as_cat'] = as_cat
 
-        as_mouse = list(Game.objects.filter(mouse_user=user, status=GameStatus.ACTIVE))
+        as_mouse = list(Game.objects.filter(
+            mouse_user=user, status=GameStatus.ACTIVE))
         print(as_mouse)
         if as_mouse:
             context_dict['as_mouse'] = as_mouse
@@ -159,7 +162,8 @@ def show_game(request):
 def join_game(request):
 
     user = request.user
-    available_games = Game.objects.exclude(cat_user=user).filter(mouse_user__isnull=True).order_by('-id')
+    available_games = Game.objects.exclude(cat_user=user).filter(
+        mouse_user__isnull=True).order_by('-id')
 
     if not available_games:
         context_dict = {}
@@ -183,7 +187,8 @@ def move(request):
             move_form = MoveForm(game=game, data=request.POST)
             if move_form.is_valid():
                 move = Move(
-                    game=game, player=request.user, origin=int(move_form.data['origin']),
+                    game=game, player=request.user, origin=int(
+                        move_form.data['origin']),
                     target=int(move_form.data['target']))
                 move.save()
                 if game.status == GameStatus.FINISHED:
@@ -191,3 +196,34 @@ def move(request):
             return redirect(reverse('show_game'))
 
     return HttpResponseNotFound('<h1>Page Not Found</h1>')
+
+
+@login_required
+def select_move(request, game_id, move_number):
+
+    if move_number < 1:
+        move_number=1
+
+    board = []
+    for i in range(0, 64):
+        if i == 0 or i == 2 or i == 4 or i == 6:
+            board.append(1)
+        elif i == 59:
+            board.append(-1)
+        else:
+            board.append(0)
+
+    g = Game.objects.filter(id=game_id).first()
+    if not g or g.status != GameStatus.FINISHED:
+        return redirect(reverse('index'))
+
+    moves = list(Move.objects.filter(game=game_id))
+
+    for i in range(0, move_number):
+        origin = moves[i].origin
+        target = moves[i].target
+        board[target] = board[origin]
+        board[origin] = 0
+
+    render(request, "mouse_cat/history.html", {'board': board,
+                                               'next': move_number+1, 'previous': move_number-1})

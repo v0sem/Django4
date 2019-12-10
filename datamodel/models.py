@@ -188,19 +188,9 @@ class Move(models.Model):
                     return False
             return True
         else:
-            for target in [self.game.cat1 + 7, self.game.cat1 + 9]:
-                if self.valid(self.game, self.game.cat_user, self.game.cat1, target):
-                    return False
-            for target in [self.game.cat2 + 7, self.game.cat2 + 9]:
-                if self.valid(self.game, self.game.cat_user, self.game.cat2, target):
-                    return False
-            for target in [self.game.cat3 + 7, self.game.cat3 + 9]:
-                if self.valid(self.game, self.game.cat_user, self.game.cat3, target):
-                    return False
-            for target in [self.game.cat4 + 7, self.game.cat4 + 9]:
-                if self.valid(self.game, self.game.cat_user, self.game.cat4, target):
-                    return False
-            return True
+            if self.game.mouse < self.game.cat1 and self.game.mouse < self.game.cat2 and self.game.mouse < self.game.cat3 and self.game.mouse < self.game.cat4:
+                return True
+            return False
 
     def valid(self, game, player, origin, target):
         origin = int(origin)
