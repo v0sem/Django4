@@ -4,6 +4,10 @@ body
     color: #312010;
 }
 
+h1, h2, h3, h4{
+    font-family: 'Pathway Gothic One', sans-serif;
+}
+
 .center
 {
     padding-left: 76%;
@@ -92,18 +96,34 @@ li
 
 .board
 {
-    padding-top: 40%;
-    padding-left: 20%;
+    padding-top: 36%;
+    padding-left: 13%;
 }
 
 .cat
 {
-    height: 35px;
-    width: 35px;
+    height: 30px;
+    width: 30px;
+    align-self: center;
 }
 
-.cell
+.mouse{
+    height: 30px;
+    width: 30px;
+    align-self: center; 
+}
+
+.cell-white
 {
-    height: 35px;
-    width: 35px; 
+    height: 31px;
+    width: 31px;
+    border: 1px solid black;
+    background-color: white;
+}
+
+.cell-color{
+    height: 31px;
+    width: 31px;
+    border: 1px solid black;
+    background-color: #C5A46F;
 }

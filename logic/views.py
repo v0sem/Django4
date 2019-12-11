@@ -1,5 +1,4 @@
 from django.http import Http404, HttpResponse, HttpResponseForbidden, HttpResponseNotFound
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth import authenticate, login as djangologin, logout as djangologout
 from datamodel.models import Game, Move, Counter, GameStatus
@@ -7,16 +6,33 @@ from datamodel.models import Game, Move, Counter, GameStatus
 from datamodel import constants
 from logic.forms import loginForm, SignupForm, MoveForm
 
+def counter(request):
+    
+    if 'counter' in request.session:
+        request.session['counter'] += 1
+    else:
+        request.session['counter'] = 1
+
+    Counter.objects.inc()
 
 def anonymous_required(f):
     def wrapped(request):
         if request.user.is_authenticated:
+            counter(request)
             return HttpResponseForbidden(
                 errorHTTP(request, exception="Action restricted to anonymous users"))
         else:
             return f(request)
     return wrapped
 
+def login_required(f):
+    def wrapped(request):
+        if not request.user.is_authenticated:
+            counter(request)
+            return redirect(reverse('login'))
+        else:
+            return f(request)
+    return wrapped
 
 def errorHTTP(request, exception=None):
     context_dict = {}
@@ -73,19 +89,6 @@ def signup(request):
     return render(request, "mouse_cat/signup.html", {'user_form': form})
 
 
-def counter(request):
-
-    if 'counter' in request.session:
-        request.session['counter'] += 1
-    else:
-        request.session['counter'] = 1
-
-    counter_global = Counter.objects.inc()
-
-    return render(request, "mouse_cat/counter.html", {'counter_session': request.session['counter'],
-                                                      'counter_global': counter_global})
-
-
 @login_required
 def create_game(request):
 
@@ -118,6 +121,7 @@ def select_game(request, game_id=-1):
     else:
         game = Game.objects.filter(id=game_id).first()
         if not game or game.status != GameStatus.ACTIVE:
+            counter(request)
             raise Http404
         else:
             if game.cat_user == user or game.mouse_user == user:
@@ -126,6 +130,7 @@ def select_game(request, game_id=-1):
                 return redirect(reverse('show_game'))
 
             else:
+                counter(request)
                 raise Http404
 
 
@@ -134,6 +139,7 @@ def show_game(request):
 
     g_id = request.session.get('game_id')
     if g_id is None:
+        counter(request)
         return render(request, 'mouse_cat/error.html', {'msg_error': 'No has seleccionado ningún juego'})
 
     game = Game.objects.get(pk=g_id)

@@ -1,5 +1,6 @@
 {% extends "mouse_cat/base.html" %}
 {% load staticfiles %}
+{% load app_filters %}
 
 {% block content %}
 <div id="content">
@@ -41,12 +42,25 @@
         <table class="board">
         {% for item in board %}
             {% if forloop.counter0|divisibleby:8 %}<tr>{% endif %}
-            <td class="cell" id="cell_{{ forloop.counter0}}" style='width:20px;border:1px solid #000000;text-align:center;'>
-                {% if item ==  0 %}   x
+            {% with checker=forloop.counter0|div:8%}
+            {% if checker|divisibleby:2 and forloop.counter0|divisibleby:2 %}
+            <td class="cell-white" id="cell_{{ forloop.counter0}}">
+                {% if item ==  0 %} 
                 {% elif item == 1 %} <img class="cat" src="{% static 'images/cat.png'%}">
-                {% else %}  &#9920; {% endif %}
+                {% else %}  <img class="mouse" src="{% static 'images/mouse.png'%}"> {% endif %}
             </td>
+            {% elif not checker|divisibleby:2 and not forloop.counter0|divisibleby:2 %}
+            <td class="cell-white" id="cell_{{ forloop.counter0}}">
+                {% if item ==  0 %} 
+                {% elif item == 1 %} <img class="cat" src="{% static 'images/cat.png'%}">
+                {% else %}  <img class="mouse" src="{% static 'images/mouse.png'%}"> {% endif %}
+            </td>  
+            {% else %}    
+            <td class="cell-color">
+            </td>      
+            {% endif %}
             {% if forloop.counter|divisibleby:8 or forloop.last %}</tr>{% endif %}
+            {%endwith%}
         {% endfor %}
         </table>
     </div>

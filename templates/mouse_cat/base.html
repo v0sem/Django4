@@ -1,6 +1,7 @@
 {% load staticfiles %}
 <html>
 <head>
+    <link href="https://fonts.googleapis.com/css?family=Pathway+Gothic+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
     {% block extra_js %}
     
@@ -9,13 +10,13 @@
     {% block extra_head %}
     
     {% endblock extra_head %}
-    <title>{% block title %}PSI 2019-2020: Example of application{% endblock %}</title>
+    <title>{% block title %}Cats vs Mouse{% endblock %}</title>
 </head>
 
 <body id="body">
     <div id="totalheader">
         <h1 id="title">
-            {% block atitle %}Mouse vs. Cats application{% endblock atitle %}
+            {% block atitle %}Cats vs Mouse{% endblock atitle %}
         </h1>
 
         <div id="header">
@@ -27,18 +28,17 @@
 
     <div class="verticalDivider"></div>
     <div id="sidebar">
-        <h2 class="center">Service catalog</h2>
+        <h2 class="center">Navegación</h2>
             <div class="background-list">
                 {% if user.is_authenticated %}
                 <a class="link" href="{% url 'logout' %}">Logout</a>
-                <a class="link" href="{% url 'counter' %}">Counter</a>
-                <a class="link" href="{% url 'create_game' %}">Create game</a>
-                <a class="link" href="{% url 'join_game' %}">Join game</a>
-                <a class="link" href="{% url 'select_game' %}">Select game</a>
-                <a class="link" href="{% url 'show_game' %}">Show selected game and play</a>
+                <a class="link" href="{% url 'create_game' %}">Crear partida</a>
+                <a class="link" href="{% url 'join_game' %}">Unirse a una partida</a>
+                <a class="link" href="{% url 'select_game' %}">Seleccionar partida</a>
+                <a class="link" href="{% url 'show_game' %}">Jugar a la partida seleccionada</a>
                 {% else %}
                 <a class="link" href="{% url 'login' %}">Login</a>
-                <a class="link" href="{% url 'signup' %}">Signup</a>
+                <a class="link" href="{% url 'signup' %}">Registro</a>
                 {% endif %}
             </div>
     </div>
