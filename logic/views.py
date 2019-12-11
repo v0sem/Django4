@@ -26,12 +26,12 @@ def anonymous_required(f):
     return wrapped
 
 def login_required(f):
-    def wrapped(request):
+    def wrapped(request, *args, **kwargs):
         if not request.user.is_authenticated:
             counter(request)
-            return redirect(reverse('login'))
+            return redirect('%s?next=%s' % (reverse('login'), request.path))
         else:
-            return f(request)
+            return f(request, *args, **kwargs)
     return wrapped
 
 def errorHTTP(request, exception=None):
