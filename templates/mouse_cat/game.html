@@ -5,6 +5,9 @@
 {% block content %}
 <div id="content">
     <h1>Play</h1>
+    {%if game.cat_user.username == request.user.username%} Playing as cats
+    {%else%} Playing as mouse
+    {% endif %}
     <form id="move_form" method="post" action="{% url 'move' %}" hidden>
         {% csrf_token %}
         <p>
@@ -13,7 +16,7 @@
                 <blockquote class="cat">
                     {% if game.cat_turn %}
                         {{ move_form }}
-                        <input type="submit" value="Move" />
+                        <input id="submitmf" type="submit" value="Move" />
                     {% else %}
                         Waiting for the mouse...
                         <a style="margin-left:20px;font-weight:normal" href="{% url 'show_game' %}">Refresh</a>
@@ -27,7 +30,7 @@
                 <blockquote class="mouse">
                     {% if not game.cat_turn %}
                         {{ move_form }}
-                        <input type="submit" value="Move" />
+                        <input id="submitmf" type="submit" value="Move" />
                     {% else %}
                         Waiting for the cat...
                         <a style="margin-left:20px;font-weight:normal" href="{% url 'show_game' %}">Refresh</a>
@@ -40,32 +43,60 @@
     {% if board %}
         <div class="chess_board">
         <table class="board">
+            <form id="new_move_form" method="post" action="{% url 'move' %}">
+                {% csrf_token %}
         {% for item in board %}
             {% if forloop.counter0|divisibleby:8 %}<tr>{% endif %}
             {% with checker=forloop.counter0|div:8%}
             {% if checker|divisibleby:2 and forloop.counter0|divisibleby:2 %}
-            <td class="cell-white" id="cell_{{ forloop.counter0}}">
-                {% if item ==  0 %} 
+            <td class="cell-white" id="cell_{{ forloop.counter0}}" onclick="clickFunction(this); this.style.backgroundColor = '#2196F3';">
+                {% if item ==  0 %}
                 {% elif item == 1 %} <img class="cat" src="{% static 'images/cat.png'%}">
                 {% else %}  <img class="mouse" src="{% static 'images/mouse.png'%}"> {% endif %}
             </td>
             {% elif not checker|divisibleby:2 and not forloop.counter0|divisibleby:2 %}
-            <td class="cell-white" id="cell_{{ forloop.counter0}}">
-                {% if item ==  0 %} 
+            <td class="cell-white" id="cell_{{ forloop.counter0}}" onclick="clickFunction(this); this.style.backgroundColor = '#2196F3';">
+                {% if item ==  0 %}
                 {% elif item == 1 %} <img class="cat" src="{% static 'images/cat.png'%}">
                 {% else %}  <img class="mouse" src="{% static 'images/mouse.png'%}"> {% endif %}
-            </td>  
-            {% else %}    
+            </td>
+            {% else %}
             <td class="cell-color">
-            </td>      
+            </td>
             {% endif %}
             {% if forloop.counter|divisibleby:8 or forloop.last %}</tr>{% endif %}
             {%endwith%}
         {% endfor %}
+    </form>
         </table>
     </div>
     {% endif %}
 
     <p><a class="to-home" href="{% url 'landing' %}">Return to homepage</a></p>
+
+    <script type="text/javascript">
+    function post(origin, target){
+        const form = document.getElementById("move_form");
+        document.getElementById('id_origin').value = origin;
+        document.getElementById('id_target').value = target;
+        document.getElementById('submitmf').click();
+    }
+    var clicks = 0;
+    var origin = -1;
+    var target = -1;
+    function clickFunction(cell){
+        if(clicks == 0){
+            clicks++;
+            origin = Number(cell.id.split("_").pop());
+        }else if(clicks == 1){
+            clicks = 0;
+            target = Number(cell.id.split("_").pop());
+            post(origin, target);
+        }
+    }
+    setTimeout(function(){location.reload();},5000);
+    </script>
+
 </div>
+
 {% endblock content %}
