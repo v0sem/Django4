@@ -161,6 +161,8 @@ def show_game(request):
         return render(request, 'mouse_cat/error.html', {'msg_error': 'No has seleccionado ningún juego'})
 
     game = Game.objects.get(pk=g_id)
+    if game.status == GameStatus.FINISHED:
+        return redirect(reverse('index'))
 
     board = []
     for i in range(0, 64):
@@ -217,7 +219,7 @@ def move(request):
                     target=int(move_form.data['target']))
                 move.save()
                 if game.status == GameStatus.FINISHED:
-                    return HttpResponse('<h1>You won</h1> <p><a href="\\">Return to homepage</a></p>')
+                    return HttpResponse('<h1>You won</h1> <p><a href="\">Return to homepage</a></p>')
             return redirect(reverse('show_game'))
 
     return HttpResponseNotFound('<h1>Page Not Found</h1>')
