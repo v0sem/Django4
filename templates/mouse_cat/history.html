@@ -35,13 +35,13 @@
     {% endif %}
 
     {% if next %}
-    <form method="get" action="{% url 'game_history' game.id next %}">
-        <input type="submit" value="Next">
+    <form method="get" action="{% url 'game_history' next %}">
+        <input class="button" type="submit" value="Next">
     </form>
     {% endif %}
     {% if previous > -1 %}
-    <form method="get" action="{% url 'game_history' game.id previous %}">
-        <input type="submit" value="Previous">
+    <form method="get" action="{% url 'game_history' previous %}">
+        <input class="button" type="submit" value="Previous">
     </form>
     {% endif %}
 

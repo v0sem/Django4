@@ -1,7 +1,7 @@
-body
+html
 {
     background-image: url("../images/background.jpg");
-    color: #312010;
+    color: #3F0919;
 }
 
 h1, h2, h3, h4{
@@ -96,7 +96,7 @@ li
 
 .board
 {
-    padding-top: 36%;
+    padding-top: 34%;
     padding-left: 13%;
 }
 
