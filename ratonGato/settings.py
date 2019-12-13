@@ -27,7 +27,7 @@ SECRET_KEY = 'f3smnus7cf-656dm%g$)7&)u)vrwlas_3+^%^pqg(-@wr4szez'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [u'blooming-anchorage-14787.herokuapp.com',u'protected-fjord-12706.herokuapp.com', u'127.0.0.1']
+ALLOWED_HOSTS = [u'protected-fjord-12706.herokuapp.com', u'127.0.0.1']
 
 
 # Application definition
