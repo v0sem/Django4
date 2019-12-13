@@ -107,15 +107,27 @@ def select_game(request, game_id=-1):
         context_dict = {}
         as_cat = list(Game.objects.filter(
             cat_user=user, status=GameStatus.ACTIVE))
-        print(as_cat)
         if as_cat:
             context_dict['as_cat'] = as_cat
 
         as_mouse = list(Game.objects.filter(
             mouse_user=user, status=GameStatus.ACTIVE))
-        print(as_mouse)
         if as_mouse:
             context_dict['as_mouse'] = as_mouse
+
+        finished_cat = list(Game.objects.filter(
+            cat_user=user, status=GameStatus.FINISHED))
+        finished_mouse = list(Game.objects.filter(
+            mouse_user=user, status=GameStatus.FINISHED
+        ))
+        if finished_cat:
+            context_dict['finished'] = finished_cat
+            context_dict['zero'] = 0
+            if finished_mouse:
+                context_dict['finished'].append(finished_mouse)
+        elif finished_mouse:
+            context_dict['finished'] = finished_mouse
+            context_dict['zero'] = 0
 
         return render(request, "mouse_cat/select_game.html", context_dict)
     else:
@@ -188,6 +200,8 @@ def move(request):
         game_id = request.session['game_id']
 
         if request.method == 'POST':
+            if game.status == GameStatus.FINISHED:
+                redirect(reverse('index'))
 
             game = Game.objects.get(id=game_id)
             move_form = MoveForm(game=game, data=request.POST)
@@ -198,7 +212,7 @@ def move(request):
                     target=int(move_form.data['target']))
                 move.save()
                 if game.status == GameStatus.FINISHED:
-                    return HttpResponse('<h1>You won</h1>')
+                    return HttpResponse('<h1>You won</h1> <p><a href="{% url \'landing\' %}">Return to homepage</a></p>')
             return redirect(reverse('show_game'))
 
     return HttpResponseNotFound('<h1>Page Not Found</h1>')
@@ -207,8 +221,8 @@ def move(request):
 @login_required
 def select_move(request, game_id, move_number):
 
-    if move_number < 1:
-        move_number=1
+    if move_number < 0:
+        move_number=0
 
     board = []
     for i in range(0, 64):
@@ -230,6 +244,10 @@ def select_move(request, game_id, move_number):
         target = moves[i].target
         board[target] = board[origin]
         board[origin] = 0
+    
+    next_move = move_number + 1
+    if len(moves) + 1 <= next_move:
+        next_move = None
 
-    render(request, "mouse_cat/history.html", {'board': board,
-                                               'next': move_number+1, 'previous': move_number-1})
+    return render(request, "mouse_cat/history.html", {'game': g, 'board': board,
+                                               'next': next_move, 'previous': move_number-1})

@@ -28,7 +28,15 @@
             No games as mouse
         {% endif %}
     </p>
-    
+    {% if finished %}
+    <h1>Finished Games</h1>
+    <ul>
+        {% for game in finished %}
+            <li> <a href="{% url 'game_history' game.id zero %}">{{ game }}</a></li>  
+        {% endfor %}
+    </ul>
+    {% endif %}
+
     <p><a href="{% url 'landing' %}">Return to homepage</a></p>
 </div>
 {% endblock content %}
