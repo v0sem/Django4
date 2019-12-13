@@ -5,8 +5,11 @@
 {% block content %}
 <div id="content">
     <h1>Play</h1>
-    {%if game.cat_user.username == request.user.username%} Playing as cats
-    {%else%} Playing as mouse
+    {%if game.cat_user.username == request.user.username%} Playing as cats |
+    {%else%} Playing as mouse |
+    {% endif %}
+    {%if game.cat_turn %} Cats turn
+    {%else%} Mouse turn
     {% endif %}
     <form id="move_form" method="post" action="{% url 'move' %}" hidden>
         {% csrf_token %}
@@ -96,6 +99,7 @@
     }
     setTimeout(function(){location.reload();},5000);
     </script>
+
 
 </div>
 
